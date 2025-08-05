@@ -3,60 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat Fullscreen</title>
+  <title>Full Chat</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       width: 100%;
+      background-color: #ffffff;
       overflow: hidden;
-      background: #fff;
     }
 
-    /* Wait for widget and override its position/size */
+    #chat-placeholder {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .llm-widget-wrapper {
-      position: fixed !important;
-      inset: 0 !important;
+      position: static !important;
+      width: 100% !important;
+      height: 100% !important;
       margin: 0 !important;
       padding: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      max-width: 100vw !important;
-      max-height: 100vh !important;
       border-radius: 0 !important;
       box-shadow: none !important;
       z-index: 9999 !important;
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
     }
 
-    .llm-widget-wrapper > div {
-      width: 100% !important;
-      height: 100% !important;
-    }
-
-    /* Hide launcher button (bottom right) */
     .llm-launcher {
       display: none !important;
-    }
-
-    ::-webkit-scrollbar {
-      display: none;
-    }
-    body {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
     }
   </style>
 </head>
 <body>
+  <div id="chat-placeholder"></div>
+
   <script
-    data-embed-id="YOUR-EMBED-ID"
+    data-embed-id="c5fd0206-0cce-49bf-bfdc-4e106ab16d3d"
     data-base-api-url="https://anythingllm.fbbrain.space/api/embed"
     data-default-open="true"
     src="https://anythingllm.fbbrain.space/embed/anythingllm-chat-widget.min.js">
+  </script>
+
+  <script>
+    // Wait for the widget to appear and move it into our placeholder
+    const moveWidgetToPlaceholder = () => {
+      const widget = document.querySelector('.llm-widget-wrapper');
+      const placeholder = document.getElementById('chat-placeholder');
+
+      if (widget && placeholder && !placeholder.contains(widget)) {
+        placeholder.appendChild(widget);
+      } else {
+        setTimeout(moveWidgetToPlaceholder, 100); // Try again
+      }
+    };
+
+    // Start checking once DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      moveWidgetToPlaceholder();
+    });
   </script>
 </body>
 </html>
